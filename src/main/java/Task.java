@@ -1,3 +1,5 @@
+//Solution below adapted from https://nus-cs2103-ay2425s2.github.io/website/schedule/week2/project.html#1-learn-about-the-project, A-Classes
+
 public class Task {
 	protected String task;
 	protected boolean isDone;
@@ -16,7 +18,7 @@ public class Task {
 	}
 
 	private String showDoneStatus() {
-		return this.isDone ? "X" : " ";
+		return (this.isDone ? "X" : " ");
 	}
 
 	@Override
