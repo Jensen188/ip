@@ -83,11 +83,9 @@ public class Pikachu {
                 to = command.substring(toIndex + 3, fromIndex).trim();
                 from = command.substring(fromIndex + 5).trim();
             } else {
-                System.out.println(fromIndex+ " " + toIndex);
                 from = command.substring(fromIndex + 5, toIndex).trim();
                 to = command.substring(toIndex + 3).trim();
             }
-            System.out.println(event+ " " + from + " " + to);
             Task newEvent = new Event(event, from, to);
             list.add(newEvent);
             System.out.printf("Added: %s\n", newEvent);
