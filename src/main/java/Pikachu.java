@@ -1,6 +1,11 @@
 import java.util.Scanner;
 import java.util.ArrayList;
 
+import task.Task;
+import task.Deadline;
+import task.ToDo;
+import task.Event;
+
 public class Pikachu {
     private static final String line = "--------------------------------------";
     private static final String name = "Pikachu";
@@ -28,9 +33,11 @@ public class Pikachu {
     }
 
     //React based on command given
-    private static void echo(String[] command) {
+    private static void handleCommand(String command) {
         line();
-        switch (command[0]) {
+        StringBuilder builder = new StringBuilder();
+        String[] action = command.split(" ");
+        switch (action[0]) {
         case ("bye"):
             exit();
             Pikachu.isExit = true;
@@ -44,39 +51,66 @@ public class Pikachu {
             break;
 
         case "mark":
-            int id = Integer.parseInt(command[1]) - 1;
+            int id = Integer.parseInt(action[1]) - 1;
             list.get(id).markAsDone();
             System.out.printf("Pika! This task has been marked as done:\n%s\n", list.get(id));
             break;
 
         case "unmark":
-            int index = Integer.parseInt(command[1]) - 1;
+            int index = Integer.parseInt(action[1]) - 1;
             list.get(index).markAsNotDone();
             System.out.printf("Pika! This task has been marked as not done yet:\n%s\n", list.get(index));
             break;
 
-        default:
-            StringBuilder builder = new StringBuilder();
-            for (String s : command) {
-                builder.append(s);
-                builder.append(" ");
+        case "deadline":
+            //Solution below inspired by ChatGPT
+            int byIndex = command.indexOf("/by");
+            String deadline = command.substring(8, byIndex).trim();
+            String by = command.substring(byIndex + 3).trim();
+            Task newDeadline = new Deadline(deadline, by);
+            list.add(newDeadline);
+            System.out.printf("Added: %s\n", newDeadline);
+            break;
+
+        case "event":
+            int toIndex = command.indexOf("/to");
+            int fromIndex  = command.indexOf("/from");
+
+            String event = command.substring(5, Math.min(fromIndex, toIndex)).trim();
+            String from = "";
+            String to = "";
+            if (fromIndex > toIndex) {
+                to = command.substring(toIndex + 3, fromIndex).trim();
+                from = command.substring(fromIndex + 5).trim();
+            } else {
+                System.out.println(fromIndex+ " " + toIndex);
+                from = command.substring(fromIndex + 5, toIndex).trim();
+                to = command.substring(toIndex + 3).trim();
             }
-            String description = builder.toString();
-            Task newTask = new Task(description);
+            System.out.println(event+ " " + from + " " + to);
+            Task newEvent = new Event(event, from, to);
+            list.add(newEvent);
+            System.out.printf("Added: %s\n", newEvent);
+            break;
+
+        case "todo":
+            String description = command.substring(4).trim();
+            Task newTask = new ToDo(description);
             list.add(newTask);
-            System.out.printf("added: %s\n", description);
+            System.out.printf("Added: %s\n", newTask);
             break;
         }
+        System.out.printf("⚡⚡⚡ %d tasks in the list ⚡⚡⚡\n", list.size());
         line();
-        System.out.println();
+
     }
 
     public static void main(String[] args) {
         greet();
         Scanner sc = new Scanner(System.in);
         while (!Pikachu.isExit) {
-            String[] command = sc.nextLine().split(" ");
-            echo(command);
+            String command = sc.nextLine();
+            handleCommand(command);
         }
     }
 }
