@@ -1,5 +1,7 @@
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.ArrayList;
+
 
 import task.Task;
 import task.Deadline;
@@ -35,18 +37,20 @@ public class Pikachu {
     //React based on command given
     private static void handleCommand(String command) {
         line();
+        boolean needPrint = false;
         StringBuilder builder = new StringBuilder();
         String[] action = command.split(" ");
         switch (action[0]) {
         case ("bye"):
             exit();
             Pikachu.isExit = true;
+            needPrint = true;
             break;
 
         case "list":
             System.out.println("Pika~pika! Here is the list:");
             for (int i = 0; i < list.size(); i++) {
-                System.out.printf("%d. %s\n", i+1, list.get(i));
+                System.out.printf("%d. %s\n", i + 1, list.get(i));
             }
             break;
 
@@ -54,12 +58,14 @@ public class Pikachu {
             int id = Integer.parseInt(action[1]) - 1;
             list.get(id).markAsDone();
             System.out.printf("Pika! This task has been marked as done:\n%s\n", list.get(id));
+            needPrint = true;
             break;
 
         case "unmark":
             int index = Integer.parseInt(action[1]) - 1;
             list.get(index).markAsNotDone();
             System.out.printf("Pika! This task has been marked as not done yet:\n%s\n", list.get(index));
+            needPrint = true;
             break;
 
         case "deadline":
@@ -70,11 +76,12 @@ public class Pikachu {
             Task newDeadline = new Deadline(deadline, by);
             list.add(newDeadline);
             System.out.printf("Added: %s\n", newDeadline);
+            needPrint = true;
             break;
 
         case "event":
             int toIndex = command.indexOf("/to");
-            int fromIndex  = command.indexOf("/from");
+            int fromIndex = command.indexOf("/from");
 
             String event = command.substring(5, Math.min(fromIndex, toIndex)).trim();
             String from = "";
@@ -89,18 +96,33 @@ public class Pikachu {
             Task newEvent = new Event(event, from, to);
             list.add(newEvent);
             System.out.printf("Added: %s\n", newEvent);
+            needPrint = true;
             break;
 
         case "todo":
-            String description = command.substring(4).trim();
-            Task newTask = new ToDo(description);
-            list.add(newTask);
-            System.out.printf("Added: %s\n", newTask);
-            break;
-        }
-        System.out.printf("⚡⚡⚡ %d tasks in the list ⚡⚡⚡\n", list.size());
-        line();
+            try {
+                String description = command.substring(4).trim();
+                if (description.isEmpty()) {
+                    throw new IllegalArgumentException("Pikachu needs description of TODO!!");
+                }
+                Task newTask = new ToDo(description);
+                list.add(newTask);
+                System.out.printf("Added: %s\n", newTask);
+                needPrint = true;
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+                break;
+            }
 
+        default:
+            System.out.println("Pikachu doesn't know what to do with this command!");
+        }
+
+        if (needPrint) {
+            System.out.printf("⚡⚡⚡ %d tasks in the list ⚡⚡⚡\n", list.size());
+        }
+        line();
     }
 
     public static void main(String[] args) {
