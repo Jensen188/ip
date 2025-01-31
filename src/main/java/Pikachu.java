@@ -68,6 +68,14 @@ public class Pikachu {
             needPrint = true;
             break;
 
+        case "delete":
+            int deleteId = Integer.parseInt(action[1]) - 1;
+            Task deletedTask = list.get(deleteId);
+            list.remove(deleteId);
+            System.out.printf("Pika! This task has been deleted:\n%s\n", deletedTask);
+            needPrint = true;
+            break;
+
         case "deadline":
             //Solution below inspired by ChatGPT
             int byIndex = command.indexOf("/by");
