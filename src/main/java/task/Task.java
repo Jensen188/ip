@@ -10,6 +10,8 @@ public abstract class Task {
 		isDone = false;
 	}
 
+	public abstract String saveAsFileFormat();
+
 	public void markAsDone() {
 		this.isDone = true;
 	}

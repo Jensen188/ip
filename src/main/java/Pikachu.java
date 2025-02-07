@@ -1,6 +1,8 @@
-import java.util.NoSuchElementException;
+import java.io.*;
 import java.util.Scanner;
 import java.util.ArrayList;
+
+import java.io.IOException;
 
 
 import task.Task;
@@ -9,14 +11,15 @@ import task.ToDo;
 import task.Event;
 
 public class Pikachu {
-    private static final String line = "--------------------------------------";
-    private static final String name = "Pikachu";
+    private static final String DATAFILE_PATH = "./data/pikachu.txt";
+    private static final String LINE = "--------------------------------------";
+    private static final String NAME = "Pikachu";
     private static boolean isExit = false;
-    private static final ArrayList<Task> list = new ArrayList<>();
+    private static final ArrayList<Task> TASKS = new ArrayList<>();
 
     //Printing lines
     private static void line() {
-        System.out.println(line);
+        System.out.println(LINE);
     }
 
     private static void greet() {
@@ -25,53 +28,94 @@ public class Pikachu {
                 It's me %s!!
                 What can I do for you?
                 
-                """, name );
+                """, NAME);
         line();
+    }
+
+    private static void loadData() throws FileNotFoundException{
+        File file = new File(DATAFILE_PATH);
+        Scanner sc = new Scanner(file);
+        while (sc.hasNext()) {
+            String[] input = sc.nextLine().split("\\|");
+            String taskType = input[0];
+            String isDone = input[1];
+            String taskName = input[2];
+            Task task = null;
+            switch (taskType) {
+            case "T":
+                task = new ToDo(taskName);
+                break;
+            case "D":
+                String by = input[3];
+                task = new Deadline(taskName, by);
+                break;
+            case "E":
+                String from = input[3];
+                String to = input[4];
+                task = new Event(taskName, from, to);
+                break;
+            }
+            if (isDone.equals("true") && task != null) {
+                task.markAsDone();
+            }
+            TASKS.add(task);
+        }
+    }
+
+    private static void saveData() throws IOException {
+        File directory = new File("./data");
+        if (!directory.exists()) {
+            directory.mkdir();
+        }
+        FileWriter fw = new FileWriter(DATAFILE_PATH);
+        for (Task task : TASKS) {
+            fw.write(task.saveAsFileFormat());
+            fw.append("\n");
+        }
+        fw.close();
     }
 
     //Stop the chatbot
     private static void exit() {
-        System.out.printf("Bye. %s wants to see you again soon!\n", Pikachu.name);
+        System.out.printf("Bye. %s wants to see you again soon!\n", Pikachu.NAME);
     }
 
     //React based on command given
     private static void handleCommand(String command) {
         line();
         boolean needPrint = false;
-        StringBuilder builder = new StringBuilder();
         String[] action = command.split(" ");
         switch (action[0]) {
         case ("bye"):
             exit();
             Pikachu.isExit = true;
-            needPrint = true;
             break;
 
         case "list":
             System.out.println("Pika~pika! Here is the list:");
-            for (int i = 0; i < list.size(); i++) {
-                System.out.printf("%d. %s\n", i + 1, list.get(i));
+            for (int i = 0; i < TASKS.size(); i++) {
+                System.out.printf("%d. %s\n", i + 1, TASKS.get(i));
             }
             break;
 
         case "mark":
             int id = Integer.parseInt(action[1]) - 1;
-            list.get(id).markAsDone();
-            System.out.printf("Pika! This task has been marked as done:\n%s\n", list.get(id));
+            TASKS.get(id).markAsDone();
+            System.out.printf("Pika! This task has been marked as done:\n%s\n", TASKS.get(id));
             needPrint = true;
             break;
 
         case "unmark":
             int index = Integer.parseInt(action[1]) - 1;
-            list.get(index).markAsNotDone();
-            System.out.printf("Pika! This task has been marked as not done yet:\n%s\n", list.get(index));
+            TASKS.get(index).markAsNotDone();
+            System.out.printf("Pika! This task has been marked as not done yet:\n%s\n", TASKS.get(index));
             needPrint = true;
             break;
 
         case "delete":
             int deleteId = Integer.parseInt(action[1]) - 1;
-            Task deletedTask = list.get(deleteId);
-            list.remove(deleteId);
+            Task deletedTask = TASKS.get(deleteId);
+            TASKS.remove(deleteId);
             System.out.printf("Pika! This task has been deleted:\n%s\n", deletedTask);
             needPrint = true;
             break;
@@ -82,7 +126,7 @@ public class Pikachu {
             String deadline = command.substring(8, byIndex).trim();
             String by = command.substring(byIndex + 3).trim();
             Task newDeadline = new Deadline(deadline, by);
-            list.add(newDeadline);
+            TASKS.add(newDeadline);
             System.out.printf("Added: %s\n", newDeadline);
             needPrint = true;
             break;
@@ -102,7 +146,7 @@ public class Pikachu {
                 to = command.substring(toIndex + 3).trim();
             }
             Task newEvent = new Event(event, from, to);
-            list.add(newEvent);
+            TASKS.add(newEvent);
             System.out.printf("Added: %s\n", newEvent);
             needPrint = true;
             break;
@@ -114,7 +158,7 @@ public class Pikachu {
                     throw new IllegalArgumentException("Pikachu needs description of TODO!!");
                 }
                 Task newTask = new ToDo(description);
-                list.add(newTask);
+                TASKS.add(newTask);
                 System.out.printf("Added: %s\n", newTask);
                 needPrint = true;
                 break;
@@ -128,12 +172,22 @@ public class Pikachu {
         }
 
         if (needPrint) {
-            System.out.printf("⚡⚡⚡ %d tasks in the list ⚡⚡⚡\n", list.size());
+            System.out.printf("⚡⚡⚡ %d tasks in the list ⚡⚡⚡\n", TASKS.size());
+        }
+        try {
+            Pikachu.saveData();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
         }
         line();
     }
 
     public static void main(String[] args) {
+        try {
+            loadData();
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
         greet();
         Scanner sc = new Scanner(System.in);
         while (!Pikachu.isExit) {
