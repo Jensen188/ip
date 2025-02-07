@@ -6,6 +6,11 @@ public class ToDo extends Task{
     }
 
     @Override
+    public String saveAsFileFormat() {
+        return "T|" + this.isDone + "|" + this.task;
+    }
+
+    @Override
     public String toString() {
         return "[T]" + super.toString();
     }
