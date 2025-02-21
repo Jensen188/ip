@@ -1,8 +1,10 @@
-import task.*;
+package pikachu;
 
-import storage.Storage;
-import parser.Parser;
-import ui.Ui;
+import pikachu.task.*;
+
+import pikachu.storage.Storage;
+import pikachu.parser.Parser;
+import pikachu.ui.Ui;
 
 public class Pikachu {
 
@@ -44,7 +46,7 @@ public class Pikachu {
     }
 
     public static void main(String[] args) {
-        new Pikachu("./data/Pikachu.txt").run();
+        new Pikachu("./data/pikachu.txt").run();
     }
 }
 

@@ -1,4 +1,5 @@
-package PACKAGE_NAME;
+package pikachu.exception;
 
 public class PikachuException {
+    
 }

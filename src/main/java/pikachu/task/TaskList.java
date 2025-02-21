@@ -1,4 +1,4 @@
-package task;
+package pikachu.task;
 
 import java.util.ArrayList;
 

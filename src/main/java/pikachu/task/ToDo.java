@@ -1,4 +1,4 @@
-package task;
+package pikachu.task;
 
 public class ToDo extends Task{
     public ToDo(String description) {

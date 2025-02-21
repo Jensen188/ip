@@ -1,10 +1,10 @@
-package storage;
+package pikachu.storage;
 
-import task.Deadline;
-import task.Event;
-import task.Task;
-import task.ToDo;
-import task.TaskList;
+import pikachu.task.Deadline;
+import pikachu.task.Event;
+import pikachu.task.Task;
+import pikachu.task.ToDo;
+import pikachu.task.TaskList;
 
 import java.io.File;
 import java.io.FileNotFoundException;

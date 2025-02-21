@@ -1,5 +1,5 @@
 //Solution below adapted from https://nus-cs2103-ay2425s2.github.io/website/schedule/week2/project.html#1-learn-about-the-project, A-Classes
-package task;
+package pikachu.task;
 
 public abstract class Task {
     protected String task;

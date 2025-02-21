@@ -1,4 +1,4 @@
-package ui;
+package pikachu.ui;
 
 import java.util.Scanner;
 
