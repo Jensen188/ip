@@ -2,10 +2,10 @@
 package task;
 
 public abstract class Task {
-	protected String task;
-	protected boolean isDone;
+    protected String task;
+    protected boolean isDone;
 
-	public Task(String task) {
+    public Task(String task) {
 		this.task = task;
 		isDone = false;
 	}
