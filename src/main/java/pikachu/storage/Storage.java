@@ -75,7 +75,7 @@ public class Storage {
         File saveFile = new File(dataPath);
         boolean hasCreatedNewFile = false;
         if (!saveFile.exists()) {
-            hasCreatedNewFile = saveFile.createNewFile();
+            hasCreatedNewFile = saveFile.getParentFile().mkdirs();
         }
         if (hasCreatedNewFile) {
             System.out.println("Created new file at: " + dataPath);
