@@ -33,15 +33,10 @@ public class Storage {
         }
 
         Scanner sc = new Scanner(file);
-        this.tasks = new ArrayList<>(); // Initialize the task list
+        this.tasks = new ArrayList<>();
 
         while (sc.hasNext()) {
             String[] input = sc.nextLine().split("\\|");
-
-            if (input.length < 3) {
-                System.out.println("Skipping malformed line: " + String.join("|", input));
-                continue; // Skip malformed lines
-            }
 
             String taskType = input[0];
             String isDone = input[1];
@@ -65,23 +60,18 @@ public class Storage {
                     task = new Event(taskName, from, to);
                 }
                 break;
-            default:
-                System.out.println("Unknown task type: " + taskType);
             }
-
             if (task != null) {
                 if (isDone.equals("true")) {
                     task.markAsDone();
                 }
                 tasks.add(task);
-            } else {
-                System.out.println("Skipping invalid task format: " + String.join("|", input));
             }
         }
         return tasks;
     }
 
-    public ArrayList<Task> saveData(TaskList tasks) throws IOException {
+    public void saveData(TaskList tasks) throws IOException {
         File saveFile = new File(dataPath);
         boolean hasCreatedNewFile = false;
         if (!saveFile.exists()) {
@@ -96,6 +86,5 @@ public class Storage {
             fw.append("\n");
         }
         fw.close();
-        return this.tasks;
     }
 }

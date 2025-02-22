@@ -21,10 +21,19 @@ public class TaskList {
         tasks.add(task);
     }
 
-    public Task getTask(int index) {
+    public Task getTask(int index) throws IllegalArgumentException {
+        if (!isValidIndex(index)) {
+            throw new IllegalArgumentException("Pikachu needs a valid index!");
+        }
         return this.tasks.get(index);
     }
 
+    public boolean isValidIndex(int index) {
+        if (this.getSize() == 0) {
+            return false;
+        }
+        return index >= 0 && index < this.tasks.size();
+    }
     public int getSize() {
         return this.tasks.size();
     }

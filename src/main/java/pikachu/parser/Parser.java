@@ -9,6 +9,7 @@ import pikachu.task.TaskList;
 import pikachu.storage.Storage;
 
 import java.io.IOException;
+import java.time.format.DateTimeParseException;
 
 public class Parser {
 
@@ -110,9 +111,13 @@ public class Parser {
         int byIndex = command.indexOf("/by");
         String deadline = command.substring(8, byIndex).trim();
         String by = command.substring(byIndex + 3).trim();
-        Task newDeadline = new Deadline(deadline, by);
-        tasks.addTask(newDeadline);
-        System.out.printf("Added: %s\n", newDeadline);
+        try {
+            Task newDeadline = new Deadline(deadline, by);
+            tasks.addTask(newDeadline);
+            System.out.printf("Added: %s\n", newDeadline);
+        } catch (DateTimeParseException e) {
+            System.out.println(by + " is not a valid deadline!\n" + "Pls write in YYYY-MM-DD format");
+        }
     }
 
     public void event(String command) {
