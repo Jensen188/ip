@@ -52,6 +52,7 @@ public class TaskList {
     public boolean isValidIndex(int index) {
         return index >= 0 && index < this.tasks.size();
     }
+
     public int getSize() {
         return this.tasks.size();
     }

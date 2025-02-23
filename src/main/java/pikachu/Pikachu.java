@@ -1,7 +1,6 @@
 package pikachu;
 
-import pikachu.task.*;
-
+import pikachu.task.TaskList;
 import pikachu.storage.Storage;
 import pikachu.parser.Parser;
 import pikachu.ui.Ui;
@@ -18,22 +17,26 @@ public class Pikachu {
     public Pikachu(String filePath) {
         this.ui = new Ui();
         this.storage = new Storage(filePath);
+
         try {
             this.tasks = new TaskList(storage.loadData());
         } catch (Exception e) {
             this.tasks = new TaskList();
         }
+
         this.parser = new Parser(storage, tasks);
     }
 
     public void run() {
-        this.ui.showWelcome();
         boolean isExit = false;
+        this.ui.showWelcome();
+
         while(!isExit) {
             try {
                 String command = ui.readCommand();
                 ui.showLine();
-                isExit = parser.handleCommand(command);
+                isExit = parser.shouldExitAfterProcess(command);
+
                 if(isExit) {
                     ui.showExit();
                 }
