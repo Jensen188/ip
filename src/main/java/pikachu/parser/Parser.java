@@ -1,5 +1,9 @@
 package pikachu.parser;
 
+import java.io.IOException;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+
 import pikachu.task.Deadline;
 import pikachu.task.Event;
 import pikachu.task.Task;
@@ -8,8 +12,6 @@ import pikachu.task.TaskList;
 
 import pikachu.storage.Storage;
 
-import java.io.IOException;
-import java.time.format.DateTimeParseException;
 
 public class Parser {
 
@@ -47,6 +49,11 @@ public class Parser {
         case "delete":
             delete(action);
             showTotalTasks();
+            break;
+
+        case "find":
+            String keyword = action[1];
+            find(keyword);
             break;
 
         case "deadline":
@@ -106,6 +113,19 @@ public class Parser {
         System.out.printf("Pika! This task has been deleted:\n%s\n", deletedTask);
     }
 
+    public void find(String keyword) {
+        ArrayList<Task> matchingTasks = tasks.getMatchingTasks(keyword);
+        if (matchingTasks.isEmpty()) {
+            return;
+        }
+
+        System.out.println("Pika! These tasks has been found:");
+        for (int i = 0; i < matchingTasks.size(); i++) {
+            Task task = matchingTasks.get(i);
+            System.out.printf("%d. %s\n", i + 1, task);
+        }
+    }
+
     public void deadline(String command) {
         //Solution below inspired by ChatGPT
         int byIndex = command.indexOf("/by");
@@ -160,5 +180,4 @@ public class Parser {
             System.out.printf("⚡⚡⚡ %d tasks in the list ⚡⚡⚡\n", tasks.getSize());
         }
     }
-
 }

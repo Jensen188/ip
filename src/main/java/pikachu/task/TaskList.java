@@ -45,4 +45,14 @@ public class TaskList {
     public void removeTask(Task task) {
         tasks.remove(task);
     }
+
+    public ArrayList<Task> getMatchingTasks(String keyword) {
+        ArrayList<Task> matchingTasks = new ArrayList<>();
+        for (Task task: tasks) {
+            if (task.hasMatchingKeyword(keyword)) {
+                matchingTasks.add(task);
+            }
+        }
+        return matchingTasks;
+    }
 }

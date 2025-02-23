@@ -24,6 +24,11 @@ public abstract class Task {
 		return (this.isDone ? "X" : " ");
 	}
 
+	public boolean hasMatchingKeyword(String keyword) {
+		return this.task.toLowerCase()
+				.contains(keyword.toLowerCase());
+	}
+
 	@Override
 	public String toString() {
 		return String.format("[%s] %s", this.showDoneStatus(), task);
