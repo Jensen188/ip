@@ -22,8 +22,13 @@ public class Storage {
     }
 
     /**
-     * Load data into a TaskList
-     * @throws FileNotFoundException File doesn't exist
+     * Loads tasks from a file specified by {@code dataPath} and returns them as an {@code ArrayList} of {@code Task}.
+     * The method reads the file line by line, processes each line to identify the task type, and creates the appropriate
+     * {@code Task} object (either {@code ToDo}, {@code Deadline}, or {@code Event}). It also marks tasks as completed
+     * if indicated in the file.
+     *
+     * @return An {@code ArrayList} of {@code Task} objects loaded from the file.
+     * @throws FileNotFoundException If the file at {@code dataPath} does not exist.
      */
     public ArrayList<Task> loadData() throws FileNotFoundException {
         File file = new File(dataPath);
@@ -71,6 +76,13 @@ public class Storage {
         return tasks;
     }
 
+    /**
+     * Saves the tasks from the given {@code TaskList} to a file specified by {@code dataPath}.
+     * If the file does not exist, it attempts to create the necessary directories and the file.
+     *
+     * @param tasks The {@code TaskList} containing tasks to be saved.
+     * @throws IOException If an I/O error occurs while writing to the file.
+     */
     public void saveData(TaskList tasks) throws IOException {
         File saveFile = new File(dataPath);
         boolean hasCreatedNewFile = false;
