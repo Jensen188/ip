@@ -1,10 +1,10 @@
 package pikachu.parser;
 
+import pikachu.task.TaskList;
+import pikachu.task.Task;
 import pikachu.task.Deadline;
 import pikachu.task.Event;
-import pikachu.task.Task;
 import pikachu.task.ToDo;
-import pikachu.task.TaskList;
 
 import pikachu.storage.Storage;
 
@@ -21,7 +21,7 @@ public class Parser {
         this.tasks = tasks;
     }
 
-    public boolean handleCommand(String command) {
+    public boolean shouldExitAfterProcess(String command) {
         String[] action = command.split(" ");
         boolean isExit = false;
         switch (action[0]) {
@@ -125,8 +125,8 @@ public class Parser {
         int fromIndex = command.indexOf("/from");
 
         String event = command.substring(5, Math.min(fromIndex, toIndex)).trim();
-        String from = "";
-        String to = "";
+        String from;
+        String to;
         if (fromIndex > toIndex) {
             to = command.substring(toIndex + 3, fromIndex).trim();
             from = command.substring(fromIndex + 5).trim();

@@ -7,7 +7,7 @@ public abstract class Task {
 
     public Task(String task) {
 		this.task = task;
-		isDone = false;
+		this.isDone = false;
 	}
 
 	public abstract String saveAsFileFormat();
