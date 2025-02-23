@@ -2,6 +2,7 @@ package pikachu.parser;
 
 import java.io.IOException;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 
 import pikachu.task.TaskList;
 import pikachu.task.Task;
@@ -64,6 +65,11 @@ public class Parser {
         case "delete":
             delete(action);
             showTotalTasks();
+            break;
+
+        case "find":
+            String keyword = action[1];
+            find(keyword);
             break;
 
         case "deadline":
@@ -142,6 +148,19 @@ public class Parser {
         System.out.printf("Pika! This task has been deleted:\n%s\n", deletedTask);
     }
 
+    public void find(String keyword) {
+        ArrayList<Task> matchingTasks = tasks.getMatchingTasks(keyword);
+        if (matchingTasks.isEmpty()) {
+            return;
+        }
+
+        System.out.println("Pika! These tasks has been found:");
+        for (int i = 0; i < matchingTasks.size(); i++) {
+            Task task = matchingTasks.get(i);
+            System.out.printf("%d. %s\n", i + 1, task);
+        }
+    }
+
     /**
      * Adds a new deadline task to the task list.
      *
@@ -186,7 +205,7 @@ public class Parser {
     }
 
     /**
-     * Adds a new ToDo task to the task list.
+     * Adds a new {@code ToDo} task to the task list.
      *
      * @param command The full command input from the user.
      */
@@ -204,7 +223,6 @@ public class Parser {
         }
     }
 
-
     /** Displays the total number of tasks in the task list. */
     public void showTotalTasks() {
         if (tasks.getSize() == 0) {
@@ -213,5 +231,4 @@ public class Parser {
             System.out.printf("⚡⚡⚡ %d tasks in the list ⚡⚡⚡\n", tasks.getSize());
         }
     }
-
 }
