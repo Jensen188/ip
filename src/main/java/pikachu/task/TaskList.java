@@ -40,6 +40,7 @@ public class TaskList {
         if (!isValidIndex(index)) {
             throw new IllegalArgumentException("Pikachu needs a valid index!");
         }
+        assert index >= 0 && index < this.tasks.size() : "Not a valid index";
         return this.tasks.get(index);
     }
 
@@ -63,10 +64,12 @@ public class TaskList {
 
     public void addTask(Task task) {
         tasks.add(task);
+        assert (tasks.contains(task)) : "TaskList doesn't perform add function!";
     }
 
     public void removeTask(Task task) {
         tasks.remove(task);
+        assert (!tasks.contains(task)) : "Task not removed from TaskList!";
     }
 
     public ArrayList<Task> getMatchingTasks(String keyword) {
