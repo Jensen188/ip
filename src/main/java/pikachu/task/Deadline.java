@@ -24,17 +24,19 @@ public class Deadline extends Task {
 
     /**
      * Returns a string representation of the task formatted for saving to a file.
-     * The format is "D|isDone|taskDescription|deadline".
+     * The format is "D|isDone|taskDescription|deadline|tag1 tag2 ...".
      *
      * @return A {@code String} representing the task in a format suitable for file storage.
      */
     @Override
     public String saveAsFileFormat() {
-        return "D|" + this.isDone + "|" + this.description + "|" + this.deadline;
+        return "D|" + this.isDone + "|" + this.description + "|" + this.deadline
+                + "|" + this.saveTagsAsFileFormat();
     }
 
     @Override
     public String toString() {
-        return "[D]" + super.toString() + " (by: " + this.deadline.format(formatter) + ")";
+        return "[D]" + super.toString() + " (by: " + this.deadline.format(formatter) + ")"
+                + " " + this.printTags();
     }
 }

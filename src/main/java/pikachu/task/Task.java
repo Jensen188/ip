@@ -1,6 +1,9 @@
 //Solution below adapted from https://nus-cs2103-ay2425s2.github.io/website/schedule/week2/project.html#1-learn-about-the-project, A-Classes
 package pikachu.task;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Represents an abstract task that contains a description and a completion status.
  * This class serves as the base class for different types of tasks such as {@code ToDo}, {@code Deadline}, and {@code Event}.
@@ -8,6 +11,7 @@ package pikachu.task;
 public abstract class Task {
     protected String description;
     protected boolean isDone;
+	protected Set<String> tags = new HashSet<>();
 
 	/**
 	 * Constructs
@@ -16,7 +20,7 @@ public abstract class Task {
 	 */
     public Task(String description) {
 		this.description = description;
-		isDone = false;
+		this.isDone = false;
 	}
 
 	/**
@@ -60,5 +64,26 @@ public abstract class Task {
 	@Override
 	public String toString() {
 		return String.format("[%s] %s", this.showDoneStatus(), description);
+	}
+
+	public void addTag(String tag) {
+		String addTag = "#" + tag.toLowerCase();
+		this.tags.add(addTag);
+	}
+
+	protected String printTags() {
+		if (tags.isEmpty()) {
+			return "";
+		}
+		//Idea from ChatGPT
+		return String.join(" ", tags);
+	}
+
+	protected String saveTagsAsFileFormat() {
+		if (tags.isEmpty()) {
+			return "";
+		}
+		//Idea from ChatGPT
+		return String.join("", tags);
 	}
 }
