@@ -44,22 +44,6 @@ Added: [E][ ] sleep (from: day, to: night)
 ⚡⚡⚡ 2 tasks in the list ⚡⚡⚡
 ```
 
-### Add Event task: `event`
-
-Add an event to Pikachu.
-
-Format: `event task_description /from from_date /to to_date`
-
-Example: `event sleep /from day /to night `
-
-An event sleep will be added to Pikachu.
-
-Output:
-```
-Added: [E][ ] sleep (from: day, to: night) 
-⚡⚡⚡ 2 tasks in the list ⚡⚡⚡
-```
-
 ### Add Deadline task: `deadline`
 
 Add deadline to Pikachu. 
