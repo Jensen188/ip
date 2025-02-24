@@ -11,7 +11,6 @@ import pikachu.task.Event;
 import pikachu.task.ToDo;
 
 import pikachu.storage.Storage;
-import pikachu.ui.Ui;
 
 /**
  * The {@code Parser} class processes user commands, modifies the task list accordingly,
@@ -41,7 +40,7 @@ public class Parser {
         if (isBye) {
             response = "Bye. Pikachu wants to see you again soon!\n";
         }
-        this.currentMessage = "";
+        this.currentMessage = ""; //Reset currentMessage after getting each response
         return response;
     }
 
@@ -83,17 +82,14 @@ public class Parser {
 
         case "deadline":
             deadline(command);
-            showTotalTasks();
             break;
 
         case "event":
             event(command);
-            showTotalTasks();
             break;
 
         case "todo":
             toDo(command);
-            showTotalTasks();
             break;
 
         default:
@@ -161,6 +157,11 @@ public class Parser {
         printMessageAndTotalTasks(message);
     }
 
+    /**
+     * Finds and displays all tasks that contain the keyword.
+     *
+     * @param keyword A {@code String} keyword extracted from command
+     */
     public void find(String keyword) {
         ArrayList<Task> matchingTasks = tasks.getMatchingTasks(keyword);
         if (matchingTasks.isEmpty()) {
@@ -214,9 +215,12 @@ public class Parser {
         int toIndex = command.indexOf("/to");
         int fromIndex = command.indexOf("/from");
 
+        //Getting the event description
         String event = command.substring(5, Math.min(fromIndex, toIndex)).trim();
         String from;
         String to;
+
+        //Get the /to argument and /from argument
         if (fromIndex > toIndex) {
             to = command.substring(toIndex + 3, fromIndex).trim();
             from = command.substring(fromIndex + 5).trim();
@@ -253,7 +257,11 @@ public class Parser {
         }
     }
 
-    /** Displays the total number of tasks in the task list. */
+    /**
+     * Displays all tasks in the current {@code TaskList}
+     *
+     * @return A {@code String} representation of the current {@code TaskList}
+     */
     public String showTotalTasks() {
         StringBuilder sb = new StringBuilder();
 

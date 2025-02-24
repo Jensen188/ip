@@ -79,6 +79,12 @@ public class TaskList {
         return matchingTasks;
     }
 
+    /**
+     * Returns a string representation of the {@code TaskList}.
+     * If the list is empty, a message indicating no tasks will be returned.
+     *
+     * @return A formatted string representation of {@code TaskList}
+     */
     @Override
     public String toString() {
         if (this.getSize() == 0) {
