@@ -28,7 +28,7 @@ Added: [T][ ] sleep
 ⚡⚡⚡ 1 tasks in the list ⚡⚡⚡
 ```
 
-# Add Event task: `event`
+### Add Event task: `event`
 
 Add event you plan to do to Pikachu.
 
@@ -44,7 +44,7 @@ Added: [E][ ] sleep (from: day, to: night)
 ⚡⚡⚡ 2 tasks in the list ⚡⚡⚡
 ```
 
-# Add Event task: `event`
+### Add Event task: `event`
 
 Add an event to Pikachu.
 
@@ -60,7 +60,7 @@ Added: [E][ ] sleep (from: day, to: night)
 ⚡⚡⚡ 2 tasks in the list ⚡⚡⚡
 ```
 
-# Add Deadline task: `deadline`
+### Add Deadline task: `deadline`
 
 Add deadline to Pikachu. 
 
@@ -106,7 +106,7 @@ Pika! This task has been deleted:
 
 ## Marking and unmarking task: `mark unmark`
 
-# Mark task: `mark`
+### Mark task: `mark`
 
 Mark task by index.
 
@@ -119,7 +119,7 @@ Pika! This task has been marked as done:
 ⚡⚡⚡ 2 tasks in the list ⚡⚡⚡
 ```
 
-# Unmark task: `unmark`
+### Unmark task: `unmark`
 
 Unmark task by index.
 
