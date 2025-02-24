@@ -12,7 +12,7 @@ etc...
 
 ## Adding tasks: `todo event deadline`
 
-# Add Todo task: `todo`
+### Add Todo task: `todo`
 
 Add task you plan to do to Pikachu.
 
