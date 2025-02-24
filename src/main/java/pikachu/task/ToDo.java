@@ -17,17 +17,17 @@ public class ToDo extends Task{
 
     /**
      * Returns a string representation of the to-do task formatted for saving to a file.
-     * The format is "T|isDone|taskDescription".
+     * The format is "T|isDone|taskDescription|tag1 tag2 ...".
      *
      * @return A {@code String} representing the to-do task in a format suitable for file storage.
      */
     @Override
     public String saveAsFileFormat() {
-        return "T|" + this.isDone + "|" + this.description;
+        return "T|" + this.isDone + "|" + this.description + "|" + this.saveTagsAsFileFormat();
     }
 
     @Override
     public String toString() {
-        return "[T]" + super.toString();
+        return "[T]" + super.toString() + " " + this.printTags();
     }
 }

@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Storage {
@@ -47,32 +48,58 @@ public class Storage {
             String taskType = input[0];
             String isDone = input[1];
             String taskName = input[2];
+            String tags = "";
             Task task = null;
 
             switch (taskType) {
             case "T":
                 task = new ToDo(taskName);
+                if (input.length == 4) {
+                   tags = input[3];
+                }
                 break;
+
             case "D":
                 if (input.length > 3) {
                     String by = input[3];
                     task = new Deadline(taskName, by);
                 }
+                if (input.length == 5) {
+                    tags = input[4];
+                }
                 break;
+
             case "E":
                 if (input.length > 4) {
                     String from = input[3];
                     String to = input[4];
+                    tags = input[5];
                     task = new Event(taskName, from, to);
+                }
+                if (input.length == 6) {
+                    tags = input[5];
                 }
                 break;
             }
-            if (task != null) {
-                if (isDone.equals("true")) {
-                    task.markAsDone();
-                }
-                tasks.add(task);
+            //Skip null tasks
+            if (task == null) {
+                continue;
             }
+            //Mark task if done
+            if (isDone.equals("true")) {
+                task.markAsDone();
+            }
+
+            if (!tags.isEmpty()) {
+                String[] tagArray = tags.split("#");
+                for (String tag : tagArray) {
+                    if (tag.isEmpty()) {
+                        continue;
+                    }
+                    task.addTag(tag);
+                }
+            }
+            tasks.add(task);
         }
         return tasks;
     }

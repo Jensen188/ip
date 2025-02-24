@@ -3,6 +3,7 @@ package pikachu.parser;
 import java.io.IOException;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import pikachu.task.TaskList;
 import pikachu.task.Task;
@@ -75,6 +76,10 @@ public class Parser {
             delete(action);
             break;
 
+        case "tag":
+            tag(command);
+            break;
+
         case "find":
             String keyword = action[1];
             find(keyword);
@@ -143,6 +148,36 @@ public class Parser {
     }
 
     /**
+     * Tags the specific task based on the command given.
+     *
+     * @param command The full command input by the user.
+     */
+    public void tag(String command) {
+        String[] split = command.split(" ");
+        try {
+            if (split.length < 3) {
+                throw new IllegalArgumentException("Invalid tag command: " + command + "\n"
+                        + "Should be 'tag index description'");
+            }
+
+            int index = Integer.parseInt(split[1]) - 1;
+
+            //Solution from ChatGPT to use Arrays.copyOfRange()
+            String tagDescription = String.join(" ",
+                    Arrays.copyOfRange(split, 2, split.length));
+
+            Task task = this.tasks.getTask(index);
+            task.addTag(tagDescription);
+
+            String message = String.format("Added tag #%s to task:\n %s\n", tagDescription, task);
+            printMessageAndTotalTasks(message);
+
+        } catch (IllegalArgumentException e) {
+           printMessage(e.getMessage());
+        }
+    }
+
+    /**
      * Deletes a task from the task list based on the given command input.
      *
      * @param action The command input split into an array.
@@ -201,8 +236,7 @@ public class Parser {
             printMessageAndTotalTasks(message);
         } catch (DateTimeParseException e) {
             String message = String.format(by + " is not a valid deadline!\n" + "Pls write in YYYY-MM-DD format");
-            System.out.println(message);
-            currentMessage = message;
+            printMessage(message);
         }
     }
 
@@ -252,8 +286,7 @@ public class Parser {
             String message = String.format("Added: %s\n", newTask);
             printMessageAndTotalTasks(message);
         } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
-            currentMessage = e.getMessage();
+            printMessage(e.getMessage());
         }
     }
 
@@ -278,5 +311,10 @@ public class Parser {
         System.out.println(message);
         System.out.println(this.showTotalTasks());
         this.currentMessage = message + this.showTotalTasks();
+    }
+
+    private void printMessage(String message) {
+        System.out.println(message);
+        this.currentMessage = message;
     }
 }

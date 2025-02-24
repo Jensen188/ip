@@ -27,18 +27,20 @@ public class Event extends Task {
 
     /**
      * Returns a string representation of the task formatted for saving to a file.
-     * The format is "E|isDone|taskDescription|fromDate|toDate".
+     * The format is "E|isDone|taskDescription|fromDate|toDate|tag1 tag2 ...".
      *
      * @return A {@code String} representing the task in a format suitable for file storage.
      */
     @Override
     public String saveAsFileFormat() {
-        return "E|" + this.isDone + "|" + this.description + "|" + this.from + "|" + this.to;
+        return "E|" + this.isDone + "|" + this.description + "|"
+                + this.from + "|" + this.to + "|" + this.saveTagsAsFileFormat();
     }
 
     @Override
     public String toString() {
-        return "[E]" + super.toString() + " (from: " + this.from + ", to: " + this.to + ")";
+        return "[E]" + super.toString() + " (from: " + this.from + ", to: " + this.to + ")"
+                + " " + this.printTags();
     }
 
 
