@@ -11,6 +11,7 @@ import pikachu.task.Event;
 import pikachu.task.ToDo;
 
 import pikachu.storage.Storage;
+import pikachu.ui.Ui;
 
 /**
  * The {@code Parser} class processes user commands, modifies the task list accordingly,
@@ -20,6 +21,7 @@ public class Parser {
 
     private TaskList tasks;
     private Storage storage;
+    private String currentMessage;
 
     /**
      * Constructs a {@code Parser} with the given storage and task list.
@@ -30,6 +32,17 @@ public class Parser {
     public Parser(Storage storage, TaskList tasks) {
         this.storage = storage;
         this.tasks = tasks;
+    }
+
+    public String getResponseForUi(String input) {
+        boolean isBye = shouldExitAfterProcess(input);
+
+        String response = this.currentMessage;
+        if (isBye) {
+            response = "Bye. Pikachu wants to see you again soon!\n";
+        }
+        this.currentMessage = "";
+        return response;
     }
 
     /**
@@ -49,22 +62,18 @@ public class Parser {
 
         case "list":
             list();
-            showTotalTasks();
             break;
 
         case "mark":
             mark(action);
-            showTotalTasks();
             break;
 
         case "unmark":
             unmark(action);
-            showTotalTasks();
             break;
 
         case "delete":
             delete(action);
-            showTotalTasks();
             break;
 
         case "find":
@@ -88,7 +97,8 @@ public class Parser {
             break;
 
         default:
-            System.out.println("Pikachu doesn't know what to do with this command!");
+            currentMessage = "Pikachu doesn't know what to do with this command!";
+            System.out.println(currentMessage);
         }
 
         try {
@@ -104,13 +114,8 @@ public class Parser {
      * If the list is empty, no tasks are displayed.
      */
     public void list() {
-        if (tasks.getSize() == 0) {
-            return;
-        }
-        System.out.println("Pika~pika! Here is the list:");
-        for (int i = 0; i < tasks.getSize(); i++) {
-            System.out.printf("%d. %s\n", i + 1, tasks.getTask(i));
-        }
+        String message  = this.tasks.toString();
+        printMessageAndTotalTasks(message);
     }
 
     /**
@@ -121,8 +126,10 @@ public class Parser {
     public void mark(String[] action) {
         int index = Integer.parseInt(action[1]) - 1;
         tasks.getTask(index).markAsDone();
-        System.out.printf("Pika! This task has been marked as done:\n%s\n", tasks.getTask(index));
 
+        String message = String.format("Pika! This task has been marked as done:\n%s\n",
+                tasks.getTask(index));
+        printMessageAndTotalTasks(message);
     }
 
     /**
@@ -133,7 +140,10 @@ public class Parser {
     public void unmark(String[] action) {
         int index = Integer.parseInt(action[1]) - 1;
         tasks.getTask(index).markAsNotDone();
-        System.out.printf("Pika! This task has been marked as not done yet:\n%s\n", tasks.getTask(index));
+
+        String message = String.format("Pika! This task has been marked as not done yet:\n%s\n",
+                tasks.getTask(index));
+        printMessageAndTotalTasks(message);
     }
 
     /**
@@ -145,20 +155,30 @@ public class Parser {
         int deleteIndex = Integer.parseInt(action[1]) - 1;
         Task deletedTask = tasks.getTask(deleteIndex);
         tasks.removeTask(deletedTask);
-        System.out.printf("Pika! This task has been deleted:\n%s\n", deletedTask);
+
+        String message = String.format("Pika! This task has been deleted:\n%s\n",
+                deletedTask);
+        printMessageAndTotalTasks(message);
     }
 
     public void find(String keyword) {
         ArrayList<Task> matchingTasks = tasks.getMatchingTasks(keyword);
         if (matchingTasks.isEmpty()) {
+            currentMessage = "No matching tasks found for keyword: " + keyword;
             return;
         }
 
-        System.out.println("Pika! These tasks has been found:");
+        StringBuilder sb = new StringBuilder();
+        sb.append("Pika! These tasks has been found:\n");
+
         for (int i = 0; i < matchingTasks.size(); i++) {
             Task task = matchingTasks.get(i);
-            System.out.printf("%d. %s\n", i + 1, task);
+            String taskString = String.format("%d. %s\n", i + 1, task);
+            sb.append(taskString);
         }
+
+        String message = sb.toString();
+        printMessageAndTotalTasks(message);
     }
 
     /**
@@ -171,12 +191,17 @@ public class Parser {
         int byIndex = command.indexOf("/by");
         String deadline = command.substring(8, byIndex).trim();
         String by = command.substring(byIndex + 3).trim();
+
         try {
             Task newDeadline = new Deadline(deadline, by);
             tasks.addTask(newDeadline);
-            System.out.printf("Added: %s\n", newDeadline);
+
+            String message = String.format("Added: %s\n", newDeadline);
+            printMessageAndTotalTasks(message);
         } catch (DateTimeParseException e) {
-            System.out.println(by + " is not a valid deadline!\n" + "Pls write in YYYY-MM-DD format");
+            String message = String.format(by + " is not a valid deadline!\n" + "Pls write in YYYY-MM-DD format");
+            System.out.println(message);
+            currentMessage = message;
         }
     }
 
@@ -201,7 +226,9 @@ public class Parser {
         }
         Task newEvent = new Event(event, from, to);
         tasks.addTask(newEvent);
-        System.out.printf("Added: %s\n", newEvent);
+
+        String message = String.format("Added: %s\n", newEvent);
+        printMessageAndTotalTasks(message);
     }
 
     /**
@@ -217,18 +244,31 @@ public class Parser {
             }
             Task newTask = new ToDo(description);
             tasks.addTask(newTask);
-            System.out.printf("Added: %s\n", newTask);
+
+            String message = String.format("Added: %s\n", newTask);
+            printMessageAndTotalTasks(message);
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
+            currentMessage = e.getMessage();
         }
     }
 
     /** Displays the total number of tasks in the task list. */
-    public void showTotalTasks() {
+    public String showTotalTasks() {
+        StringBuilder sb = new StringBuilder();
+
         if (tasks.getSize() == 0) {
-            System.out.println("No tasks in the list!");
-        } else {
-            System.out.printf("⚡⚡⚡ %d tasks in the list ⚡⚡⚡\n", tasks.getSize());
+            sb.append("No tasks in the list!\n");
+            return sb.toString();
         }
+
+        sb.append(String.format("⚡⚡⚡ %d tasks in the list ⚡⚡⚡\n", tasks.getSize()));
+        return sb.toString();
+    }
+
+    private void printMessageAndTotalTasks(String message) {
+        System.out.println(message);
+        System.out.println(this.showTotalTasks());
+        this.currentMessage = message + this.showTotalTasks();
     }
 }

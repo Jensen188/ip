@@ -47,7 +47,7 @@ public abstract class Task {
 	}
 
 	public boolean hasMatchingKeyword(String keyword) {
-		return this.task.toLowerCase()
+		return this.description.toLowerCase()
 				.contains(keyword.toLowerCase());
 	}
 

@@ -78,4 +78,20 @@ public class TaskList {
         }
         return matchingTasks;
     }
+
+    @Override
+    public String toString() {
+        if (this.getSize() == 0) {
+            return "No tasks in list currently\n";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("Pika~pika! Here is the list:\n");
+
+        for (int i = 0; i < this.getSize(); i++) {
+            sb.append(String.format("%d. %s\n", i + 1, this.getTask(i)));
+        }
+
+        return sb.toString();
+    }
 }

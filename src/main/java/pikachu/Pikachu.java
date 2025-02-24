@@ -48,6 +48,10 @@ public class Pikachu {
         }
     }
 
+    public String getResponse(String input) {
+        return parser.getResponseForUi(input);
+    }
+
     public static void main(String[] args) {
         new Pikachu("./data/pikachu.txt").run();
     }
