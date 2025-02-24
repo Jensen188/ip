@@ -46,6 +46,12 @@ public abstract class Task {
 		return (this.isDone ? "X" : " ");
 	}
 
+	/**
+	 * Checks whether the task description contains the keyword.
+	 *
+	 * @param keyword The keyword to search in the task description.
+	 * @return {@code true} if contains the keyword, {@code false} otherwise.
+	 */
 	public boolean hasMatchingKeyword(String keyword) {
 		return this.description.toLowerCase()
 				.contains(keyword.toLowerCase());

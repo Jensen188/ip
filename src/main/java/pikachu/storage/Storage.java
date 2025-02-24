@@ -33,6 +33,7 @@ public class Storage {
     public ArrayList<Task> loadData() throws FileNotFoundException {
         File file = new File(dataPath);
         this.tasks = new ArrayList<>();
+
         if (!file.exists()) {
             throw new FileNotFoundException("The file at " + dataPath + " does not exist.");
         }
@@ -86,12 +87,15 @@ public class Storage {
     public void saveData(TaskList tasks) throws IOException {
         File saveFile = new File(dataPath);
         boolean hasCreatedNewFile = false;
+
         if (!saveFile.exists()) {
             hasCreatedNewFile = saveFile.getParentFile().mkdirs();
         }
+
         if (hasCreatedNewFile) {
             System.out.println("Created new file at: " + dataPath);
         }
+
         FileWriter fw = new FileWriter(dataPath);
         for (Task task : tasks.getList()) {
             fw.write(task.saveAsFileFormat());
